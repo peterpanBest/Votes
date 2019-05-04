@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>投票首页</title>
+		<link rel="stylesheet" type="text/css" href="../css/mui.min.css"/>
+		<link rel="stylesheet" type="text/css" href="../assets/style/home.css"/>
+	</head>
+	<body>
+		<div id="app">
+			<header id="header" class="mui-bar mui-bar-nav bgCOlor">
+				<!-- <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a> -->
+				<h1 class="mui-title headerTitle">投票首页</h1>
+			</header>
+			<div id="slider" class="mui-slider">
+				<div class="mui-slider-group mui-slider-loop">
+					<!-- 额外增加的一个节点(循环轮播：第一个节点是最后一张轮播) -->
+					<div class="mui-slider-item mui-slider-item-duplicate slider-iten">
+						<a href="#">
+							<img src="../assets/images/banner/home3.jpg">
+						</a>
+					</div>
+					<!-- 第一张 -->
+					<div class="mui-slider-item">
+						<a href="#">
+							<img src="../assets/images/banner/home1.jpg">
+						</a>
+					</div>
+					<!-- 第二张 -->
+					<div class="mui-slider-item">
+						<a href="#">
+							<img src="../assets/images/banner/home2.jpg">
+						</a>
+					</div>
+					<!-- 第三张 -->
+					<div class="mui-slider-item">
+						<a href="#">
+							<img src="../assets/images/banner/home3.jpg">
+						</a>
+					</div>
+					<!-- 额外增加的一个节点(循环轮播：最后一个节点是第一张轮播) -->
+					<div class="mui-slider-item mui-slider-item-duplicate">
+						<a href="#">
+					<img src="../assets/images/banner/home1.jpg">
+						</a>
+					</div>
+				</div>
+				<div class="mui-slider-indicator">
+					<div class="mui-indicator mui-active"></div>
+					<div class="mui-indicator"></div>
+					<div class="mui-indicator"></div>
+				</div>
+			</div>
+			<ul id="vote-ul" class="mui-table-view">
+				
+			</ul>
+			<nav class="mui-bar mui-bar-tab">
+				<a class="mui-tab-item mui-active" href="#" data-item='1'>
+					<span class="mui-icon mui-icon-home"></span>
+					<span class="mui-tab-label">首页</span>
+				</a>
+				<a class="mui-tab-item" href="#" data-item='2'>
+					<span class="mui-icon mui-icon-email"></span>
+					<span class="mui-tab-label">新闻公告</span>
+				</a>
+				<a class="mui-tab-item" href="#" data-item='3'>
+					<span class="mui-icon mui-icon-chatbubble"></span>
+					<span class="mui-tab-label">留言</span>
+				</a>
+				<a class="mui-tab-item" href="#" data-item='4'>
+					<span class="mui-icon mui-icon-gear"></span>
+					<span class="mui-tab-label">个人中心</span>
+				</a>
+			</nav>
+		</div>
+	</body>
+	<script src="../assets/lib/doT.min.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/x-dot-template" id="voteList">
+		{{for(var i=0; i<it.length; i++){ }}
+			<li class="mui-table-view-cell mui-media" onclick="gotoVoteDetail({{=it[i].id}})" data-item="{{=it[i].id}}">
+				<a>
+					<img class="mui-media-object mui-pull-left" src="{{=it[i].imgUrl}}">
+					<div class="mui-media-body">
+						{{=it[i].title}}
+						<p class='mui-ellipsis'>投票数: {{=it[i].totalNum}}</p>
+					</div>
+				</a>
+			</li>
+		{{ } }}
+	</script>
+	<script src="../assets/lib/jquery.min.js"></script>
+	<script src="../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../assets/script/ajax.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		var tempEle = $("#vote-ul");
+		var voteData= [
+			{
+				"id": 8,
+				"title": "test5",
+				"startTime": "2019-05-01 00:00:00",
+				"endTime": "2019-06-07 00:00:00",
+				"topicStatus": 2,
+				"imgUrl": "../assets/images/60x60.gif",
+				"totalNum": 0,
+				"personVoteNum": 1,
+				"tpUserLimit": 1,
+				"isNm": 1,
+				"createTime": "2019-05-04 17:29:46",
+				"updateTime": "2019-05-04 17:29:46",
+				"isDelete": 0
+			},
+			{
+				"id": 9,
+				"title": "test6",
+				"startTime": "2019-05-01 00:00:00",
+				"endTime": "2019-06-08 00:00:00",
+				"topicStatus": 2,
+				"imgUrl": "../assets/images/60x60.gif",
+				"totalNum": 0,
+				"personVoteNum": 1,
+				"tpUserLimit": 1,
+				"isNm": 1,
+				"createTime": "2019-05-04 17:30:16",
+				"updateTime": "2019-05-04 17:30:16",
+				"isDelete": 0
+			}
+		];
+			
+		var arrText = doT.template($("#voteList").text());
+			tempEle.html(arrText(voteData));
+			
+		mui(".mui-bar").on('tap', '.mui-tab-item',function() {
+			var _item = this.dataset.item+'';
+			console.log(_item);
+			switch (_item){
+				case '1':
+					window.location.href='home.html';
+					break;
+				case '2':
+					window.location.href='news.html';
+					break;
+				case '3':
+					window.location.href='message.html';
+					break;
+				case '4':
+					window.location.href='personal.html';
+					break;
+				default:
+					break;
+			}
+		});
+		
+		var gallery = mui('#slider');
+			gallery.slider({
+				interval:2000
+			});
+		// 
+		// ajaxRequest({
+		// 	url: '/api/login/signUp',
+		// 	data: JSON.stringify({
+		// 		username: "pfs",
+		// 		password: 123456,
+		// 	}),
+		// 	type: 'post',
+		// 	success(sVal) {
+		// 		console.log(sVal);
+		// 	}
+		// });
+		
+		function gotoVoteDetail(val) {
+			mui.openWindow({
+				id:'detail',
+				url:'voteDetail.html?id='+val
+			});
+		}
+	</script>
+</html>
