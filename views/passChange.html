@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-		<title>新闻公告</title>
+		<title>修改密码</title>
 		<link rel="stylesheet" type="text/css" href="../css/mui.min.css"/>
 		<style>
 			.mui-table h4,.mui-table h5,.mui-table .mui-h5,.mui-table .mui-h6,.mui-table p{
@@ -26,22 +26,22 @@
 	</head>
 	<body>
 		<header id="header" class="mui-bar mui-bar-nav bgCOlor">
-			<h1 class="mui-title headerTitle">用户登陆</h1>
+			<h1 class="mui-title headerTitle">修改密码</h1>
 		</header>
 		<div class="mui-content" style="margin-top: 100px;">
 				<div class="mui-content-padded" style="margin: 15px;">
 					<div class="mui-input-group">
 						<div class="mui-input-row"></div>
 						<div class="mui-input-row">
-							<label>用户名</label>
-							<input id="username" type="text" placeholder="请输入用户名">
+							<label>旧密码</label>
+							<input id="oldPassword" type="password" class="mui-input-clear" placeholder="请输入密码">
 						</div>
 						<div class="mui-input-row">
-							<label>密码</label>
-							<input id="password" type="password" class="mui-input-clear" placeholder="请输入密码">
+							<label>新密码</label>
+							<input id="newPassword" type="password" class="mui-input-clear" placeholder="请输入密码">
 						</div>
 						<div class="mui-button-row">
-							<button type="button" class="mui-btn mui-btn-primary" style="width: 95%;margin-top: 20px;" onclick="loginIn()">登陆</button>
+							<button type="button" class="mui-btn mui-btn-primary" style="width: 95%;margin-top: 20px;" onclick="loginIn()">确认修改</button>
 						</div>
 						<div class="mui-input-row"></div>
 					</div>
@@ -52,38 +52,46 @@
 	<script src="../assets/lib/jquery.min.js"></script>
 	<script src="../assets/script/ajax.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
-	<script type="text/javascript">		
+	<script type="text/javascript">
+		var loginStatus = getCookie("toupiao");
+		if(loginStatus == null || loginStatus == "") {
+			mui.openWindow({
+				id:'detail',
+				url:'login.html'
+			});
+		}
+		
 		function loginIn(){
-			var _userName = $("#username").val();
-			var _passWord = $("#password").val();
-			if(_userName == "" || _userName == null) {
-				mui.alert('', '用户名不能为空', function() {
+			var _oldPass = $("#oldPassword").val();
+			var _newPass = $("#newPassword").val();
+			if(_oldPass == "" || _oldPass == null) {
+				mui.alert('', '旧密码不能为空', function() {
 					
 				});
 				return false;
 			}
-			if(_passWord == "" || _passWord == null) {
-				mui.alert('', '密码不能为空', function() {
+			if(_newPass == "" || _newPass == null) {
+				mui.alert('', '新密码不能为空', function() {
 					
 				});
 				return false;
 			}
 			ajaxRequest({
-				url: '/vote_sys/commonapi/login/qianduan/toLogin.do',
+				url: '/vote_sys/commonapi/login/qianduan/updatePwd.do',
 				data: {
-					name: _userName,
-					password: _passWord
+					userId: loginStatus,
+					oldPwd: _oldPass,
+					newPwd: _newPass
 				},
 				type: 'get',
 				success(sVal) {
 					console.log(sVal);
 					if(Number(sVal.code) == 1) {
-						var _userId = sVal.data.id;
-						setCookie("toupiao", _userId, 1);
-						setCookie("toupiaoUserName", sVal.data.name, 1);
-						mui.openWindow({
-							id:'detail',
-							url:'home.html'
+						mui.alert('', "密码修改成功，请重新登陆!", function() {
+							mui.openWindow({
+								id:'detail',
+								url:'login.html'
+							});
 						});
 					}else {
 						mui.alert('', sVal.msg, function() {

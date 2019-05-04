@@ -30,6 +30,7 @@
 	<script src="../assets/lib/doT.min.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../assets/lib/jquery.min.js"></script>
 	<script src="../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../assets/script/ajax.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../assets/lib/str.js" type="text/javascript" charset="utf-8"></script>
 	<script type="text/javascript">
 		var newId = getQueryString("newsId");
@@ -42,7 +43,20 @@
 			"updateTime": null
 		};
 		
-		var arrText = doT.template($("#newsDetail").text());
-			tempEle.html(arrText(newsDetailData));
+			ajaxRequest({
+				url: '/vote_sys/news/qianduan/detail.do',
+				data: {
+					id: newId
+				},
+				type: 'get',
+				success(sVal) {
+					console.log(sVal);
+					newsDetailData = {};
+					newsDetailData = sVal;
+					
+					var arrText = doT.template($("#newsDetail").text());
+					tempEle.html(arrText(newsDetailData));
+				}
+			});
 	</script>
 </html>

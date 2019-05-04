@@ -3,63 +3,67 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-		<title>投票详情</title>
+		<title>投票主题列表</title>
 		<link rel="stylesheet" type="text/css" href="../css/mui.min.css"/>
 		<link rel="stylesheet" type="text/css" href="../assets/style/personal.css"/>
 	</head>
 	<body>
 		<header id="header" class="mui-bar mui-bar-nav bgCOlor">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-			<h1 class="mui-title headerTitle">投票详情</h1>
+			<h1 class="mui-title headerTitle">投票主题列表</h1>
 			<button class="mui-btn mui-btn-blue mui-btn-link mui-pull-right addMess">我要留言</button>
 		</header>
-		<div class="mui-content" id="content">							
 			
+		<div class="mui-content" id="content" style="margin-bottom: 50px;">		
+				
 		</div>
 	</body>
 		<script type="text/x-dot-template" id="voteDetail">
+			{{for(var i=0; i<it.length; i++){ }}
 				<div class="mui-card">
 					<div class="mui-card-header mui-card-media" style="height:40vw;background-image:url({{=it.imgUrl}})"></div>
 					<div class="mui-card-content">
 						<div class="mui-card-content-inner">
-							<h4 style="color: #333;">{{=it.title}}</h4>
-							{{ if(it.isNm==1){ }}  
-								<p>匿名投票&nbsp; {{=it.createTime}}</p>
+							<h4 style="color: #333;">{{=it[i].name}}</h4>
+							<!-- {{ if(it[i].isNm==1){ }}  
+								<p>匿名投票&nbsp; {{=it[i].createTime}}</p>
 							{{ } else { }} 
-								<p>实名投票 {{=it.createTime}}</p>
-							{{ } }}  
-							<p style="color: #333;"></p>
+								<p>实名投票 {{=it[i].createTime}}</p>
+							{{ } }}  -->
+							<p style="color: #333;">{{=it[i].introDesc}}</p>
 						</div>
 					</div>
 					<div class="mui-input-row" style="margin: 10px 5px;">
-						<button type="button" class="mui-btn mui-btn-primary" style="width: 100%;margin-top: 10px;">实名投票</button>
-						<button type="button" class="mui-btn mui-btn-danger" style="width: 100%;margin-top: 10px;">匿名投票</button>
+						<button type="button" class="mui-btn mui-btn-primary" style="width: 40%;float: left;" onclick="vote({{=it[i].id}}, 0)">实名投票</button>
+						<button type="button" class="mui-btn mui-btn-danger" style="width: 40%;float: right;" onclick="vote({{=it[i].id}}, 1)">匿名投票</button>
 					</div>
 				</div>
+			{{ } }}
 		</script>
+		<script src="../assets/script/cookie.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../assets/lib/doT.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../assets/lib/jquery.min.js"></script>
+		<script src="../assets/lib/str.js"></script>
+		<script src="../assets/script/ajax.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
+			var loginStatus = getCookie("toupiao");
+			var idParam = getQueryString("id");
 			var tempEle = $("#content");
-			var topicData= {
-				"id": 8,
-				"title": "test5",
-				"startTime": "2019-05-01 00:00:00",
-				"endTime": "2019-06-07 00:00:00",
-				"topicStatus": 2,
-				"imgUrl": "../assets/images/banner/home1.jpg",
-				"totalNum": 0,
-				"personVoteNum": 1,
-				"tpUserLimit": 1,
-				"isNm": 1,
-				"createTime": "2019-05-04 17:29:46",
-				"updateTime": "2019-05-04 17:29:46",
-				"isDelete": 0
-			};
-			
-			var arrText = doT.template($("#voteDetail").text());
-				tempEle.html(arrText(topicData));
+			var topicData= [
+				{
+					"id": 11,
+					"name": "test5",
+					"introDesc": "test5",
+					"getVoteNum": 1,
+					"topicId": 8,
+					"imgUrl": "",
+					"pca": "",
+					"createTime": "2019-05-04 17:24:00",
+					"updateTime": "2019-05-04 17:24:00",
+					"isDelete": 0
+				}
+			];
 			
 			
 			mui(".bgCOlor").on('tap', '.addMess',function() {
@@ -68,5 +72,54 @@
 					url:'AddMessage.html'
 				});
 			});
+			
+			
+			ajaxRequest({
+				url: '/vote_sys/user/index/cel/qianduan/topic/detail.do',
+				data: {
+					id: idParam
+				},
+				type: 'get',
+				success(sVal) {
+					console.log(sVal);
+					topicData = [];
+					topicData = sVal;
+					
+					var arrText = doT.template($("#voteDetail").text());
+					tempEle.html(arrText(topicData.tl));
+				}
+			});
+			
+			function vote(valId, valType) {
+				if(loginStatus == null || loginStatus == "") {
+					mui.openWindow({
+						id:'detail',
+						url:'login.html'
+					});
+				}else {
+					ajaxRequest({
+						url: '/vote_sys/user/index/cel/qianduan/voteTA.do',
+						data: {
+							userId: loginStatus,
+							id: valId,
+							type: valType
+						},
+						type: 'get',
+						success(sVal) {
+							console.log(sVal);
+							if(Number(sVal.code) === 0){
+									mui.alert('', sVal.msg, function() {
+										
+									});
+							}else {
+								mui.alert('', '投票成功!', function() {
+									
+								});
+							}
+						}
+					});	
+				}
+			}
+			
 		</script>
 </html>

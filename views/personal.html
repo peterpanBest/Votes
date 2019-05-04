@@ -20,25 +20,14 @@
 							<a class="mui-navigate-right" href="#account">
 								<img class="mui-media-object mui-pull-left head-img" id="head-img" src="../assets/images/user-img0.jpg">
 								<div class="mui-media-body" style="line-height: 32px;">
-									Hello Sir.Zhang
+									用户名：<span id="userName"><span>
 								</div>
 							</a>
 						</li>
 					</ul>
-				<!-- 	<ul class="mui-table-view mui-table-view-chevron">
-						<li class="mui-table-view-cell">
-							<a href="#notifications" class="mui-navigate-right">新消息通知</a>
-						</li>
-						<li class="mui-table-view-cell">
-							<a href="#privacy" class="mui-navigate-right">隐私</a>
-						</li>
-						<li class="mui-table-view-cell">
-							<a href="#general" class="mui-navigate-right">通用</a>
-						</li>
-					</ul> -->
 					<div class="mui-input-row" style="margin: 10px 5px;">
-						<button type="button" class="mui-btn mui-btn-danger" style="width: 100%;margin-top: 22px;">退出登录</button>
-						<button type="button" class="mui-btn mui-btn-primary" style="width: 100%;margin-top: 10px;">注册</button>
+						<button type="button" class="mui-btn mui-btn-danger" style="width: 100%;margin-top: 22px;" onclick="loginOut()">退出登录</button>
+						<button type="button" class="mui-btn mui-btn-primary" style="width: 100%;margin-top: 10px;" onclick="changePass()">修改密码</button>
 					</div>
 				</div>
 			</div>
@@ -62,6 +51,72 @@
 			</a>
 		</nav>
 	</body>
+	<script src="../assets/script/cookie.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../assets/lib/doT.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../assets/lib/jquery.min.js"></script>
+	<script src="../assets/script/ajax.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../assets/script/personal.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		var loginStatus = getCookie("toupiao");
+		var userName = getCookie("toupiaoUserName");
+		
+		if(loginStatus == null || loginStatus == "") {
+			gotoLogin();
+		}else {
+			$("#userName").text(userName);
+		}
+		//http://116.62.204.146:8080/vote_sys/commonapi/login/qianduan/toLogin.do
+		mui(".mui-bar").on('tap', '.mui-tab-item',function() {
+			var _item = this.dataset.item+'';
+			console.log(_item);
+			switch (_item){
+				case '1':
+					mui.openWindow({
+						id:'detail',
+						url:'home.html'
+					});
+					break;
+				case '2':
+					mui.openWindow({
+						id:'detail',
+						url:'news.html'
+					});
+					break;
+				case '3':
+					mui.openWindow({
+						id:'detail',
+						url:'message.html'
+					});
+					break;
+				case '4':
+					mui.openWindow({
+						id:'detail',
+						url:'personal.html'
+					});
+				default:
+					break;
+			}
+		});
+		
+	
+		function loginOut() {
+			delCookie("toupiao");
+			delCookie("toupiaoUserName");
+			gotoLogin();
+		}
+		
+		function gotoLogin() {
+			mui.openWindow({
+				id:'detail',
+				url:'login.html'
+			});
+		}
+		
+		function changePass() {
+				mui.openWindow({
+				id:'detail',
+				url:'passChange.html'
+			});
+		}
+	</script>
 </html>

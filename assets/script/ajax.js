@@ -1,4 +1,4 @@
-var basrUrl = "http://localhost:3333";
+var basrUrl = "http://116.62.204.146:8080";
 function ajaxRequest(paramsJson) {
 	mui.ajax(basrUrl + paramsJson.url,{
 		data: paramsJson.data,

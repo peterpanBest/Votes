@@ -70,6 +70,7 @@
 	</script>
 	<script src="../assets/lib/doT.min.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../assets/lib/jquery.min.js"></script>
+	<script src="../assets/script/ajax.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
 	<script type="text/javascript">
 		var tempEle = $("#news-ul");
@@ -97,8 +98,6 @@
 			}
 		];
 			
-		var arrText = doT.template($("#newsList").text());
-			tempEle.html(arrText(newsData));
 			
 		mui(".mui-bar").on('tap', '.mui-tab-item',function() {
 			var _item = this.dataset.item+'';
@@ -141,6 +140,18 @@
 			});
 		});
 		
-		
+		ajaxRequest({
+			url: '/vote_sys/news/qianduan/list.do',
+			data: "",
+			type: 'get',
+			success(sVal) {
+				console.log(sVal);
+				newsData = [];
+				newsData = sVal;
+				
+			var arrText = doT.template($("#newsList").text());
+				tempEle.html(arrText(newsData));
+			}
+		});
 	</script>
 </html>

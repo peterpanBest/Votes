@@ -12,7 +12,7 @@
 			<h1 class="mui-title headerTitle">留言</h1>
 			<!-- <button class="mui-btn mui-btn-blue mui-btn-link mui-pull-right addMess">我要留言</button> -->
 		</header>
-		<div class="mui-content" id="message-ul">
+		<div class="mui-content" id="message-ul" style="margin-bottom: 80px;">
 		
 		</div>
 		<nav class="mui-bar mui-bar-tab">
@@ -50,10 +50,16 @@
 	<script src="../assets/script/cookie.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../assets/lib/doT.min.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../assets/lib/jquery.min.js"></script>
+	<script src="../assets/script/ajax.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
 	<script type="text/javascript">
-		var loginStatus = getCookie("toupiao");
-		console.log("loginStatus   ", loginStatus);
+		var loginStatus = getCookie("toupiao");	
+		if(loginStatus == null || loginStatus == "") {
+			mui.openWindow({
+				id:'detail',
+				url:'login.html'
+			});
+		}
 		
 		var tempEle = $("#message-ul");
 		var messData= [
@@ -118,6 +124,22 @@
 					});
 				default:
 					break;
+			}
+		});
+		
+		ajaxRequest({
+			url: '/vote_sys/user/index/cel/msg/qianduan/list.do',
+			data: {
+				userId: loginStatus
+			},
+			type: 'get',
+			success(sVal) {
+				console.log(sVal);
+				messData = [];
+				messData = sVal;
+				
+				var arrText = doT.template($("#messageList").text());
+				tempEle.html(arrText(messData));
 			}
 		});
 	

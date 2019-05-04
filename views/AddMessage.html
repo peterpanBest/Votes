@@ -15,11 +15,49 @@
 			<div class="mui-input-row" style="margin: 10px 5px;">
 				<textarea id="textarea" rows="5" placeholder="请输入留言"></textarea>
 				<div class="mui-input-row" style="margin: 10px 5px;">
-					<button type="button" class="mui-btn mui-btn-primary" style="width: 100%;">提交</button>
+					<button type="button" class="mui-btn mui-btn-primary" style="width: 100%;" onclick="addMessage()">提交</button>
 				</div>
 			</div>			
 		</div>
 	</body>
+	<script src="../assets/script/cookie.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../assets/lib/jquery.min.js"></script>
 	<script src="../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../assets/script/message.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../assets/script/ajax.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		var loginStatus = getCookie("toupiao");
+		if(loginStatus == null || loginStatus == "") {
+			mui.openWindow({
+				id:'detail',
+				url:'login.html'
+			});
+		}
+		
+		function addMessage() {
+			var _mess = $("#textarea").val();
+			if(_mess == "" || _mess == null) {
+				mui.alert('', '留言不能为空!', function() {
+					
+				});
+				return false;
+			}
+			
+			ajaxRequest({
+				url: '/vote_sys/user/index/cel/msg/qianduan/addMsg.do',
+				data: {
+					userId: loginStatus,
+					content: _mess
+				},
+				type: 'get',
+				success(sVal) {
+					console.log(sVal);
+					if(Number(sVal.code) === 1) {
+						mui.alert('', '留言成功!', function() {
+							mui.back();
+						});
+					}
+				}
+			});
+		}
+	</script>
 </html>

@@ -52,7 +52,7 @@
 					<div class="mui-indicator"></div>
 				</div>
 			</div>
-			<ul id="vote-ul" class="mui-table-view">
+			<ul id="vote-ul" class="mui-table-view" style="margin-bottom: 50px;">
 				
 			</ul>
 			<nav class="mui-bar mui-bar-tab">
@@ -127,9 +127,6 @@
 			}
 		];
 			
-		var arrText = doT.template($("#voteList").text());
-			tempEle.html(arrText(voteData));
-			
 		mui(".mui-bar").on('tap', '.mui-tab-item',function() {
 			var _item = this.dataset.item+'';
 			console.log(_item);
@@ -156,17 +153,19 @@
 				interval:2000
 			});
 		// 
-		// ajaxRequest({
-		// 	url: '/api/login/signUp',
-		// 	data: JSON.stringify({
-		// 		username: "pfs",
-		// 		password: 123456,
-		// 	}),
-		// 	type: 'post',
-		// 	success(sVal) {
-		// 		console.log(sVal);
-		// 	}
-		// });
+		ajaxRequest({
+			url: '/vote_sys/user/index/cel/qianduan/topic/list.do',
+			data: "",
+			type: 'get',
+			success(sVal) {
+				console.log(sVal);
+				voteData = [];
+				voteData = sVal;
+				
+				var arrText = doT.template($("#voteList").text());
+					tempEle.html(arrText(voteData));
+			}
+		});
 		
 		function gotoVoteDetail(val) {
 			mui.openWindow({
